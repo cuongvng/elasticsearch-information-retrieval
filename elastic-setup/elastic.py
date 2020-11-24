@@ -31,6 +31,23 @@ class Elastic(object):
 		"""
 		bulk(self.client, actions=data)
 
+
+	def search(self, index_name: str, script_query: dict, n_returns: int, list_fields_to_return: list):
+		try:
+			response = self.client.search(
+				index=index_name,
+				body={
+					"size": n_returns,
+					"query": script_query,
+					"_source": {"includes": list_fields_to_return}
+				},
+			)
+			return response
+		except ConnectionError:
+			print("Elastic server not found!")
+		except NotFoundError:
+			print(f"Index {index_name} not found!")
+
 	def delete_index(self, name):
 		try:
 			self.client.indices.delete(index=name)
