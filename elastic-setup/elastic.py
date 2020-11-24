@@ -18,6 +18,19 @@ class Elastic(object):
 		except Exception as e:
 			print(e)
 
+	def index_documents(self, data):
+		"""
+		Save multiple documents with the same structure to an elastic index
+		:param data: list documents, e.g.
+		[
+			{'_op_type': 'index', '_index': 'name', 'text': 'doc1',...},
+			{'_op_type': 'index', '_index': 'name', 'text': 'doc2',...},
+		]
+		where: 	`_op_type` is the operation, we want to `index` documents in this case,
+				`_index` is the name of the index to which we want to store our documents.
+		"""
+		bulk(self.client, actions=data)
+
 	def delete_index(self, name):
 		try:
 			self.client.indices.delete(index=name)
