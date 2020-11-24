@@ -1,7 +1,6 @@
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError, NotFoundError
 from elasticsearch.helpers import bulk
-import numpy as np
 import json
 
 class Elastic(object):
@@ -51,6 +50,8 @@ class Elastic(object):
 	def delete_index(self, name):
 		try:
 			self.client.indices.delete(index=name)
+			print(f"Index {name} has been deleted successfully!")
+		except ConnectionError:
+			print("Elastic server not found!")
 		except NotFoundError:
 			print(f"Index {name} not found!")
-
